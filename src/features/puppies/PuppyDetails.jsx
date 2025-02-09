@@ -1,17 +1,33 @@
+import { useEffect, useState } from "react";
+import { useGetPuppyQuery, useDeletePuppyMutation } from "./puppySlice";
+
 /**
  * @component
  * Shows comprehensive information about the selected puppy, if there is one.
  * Also provides a button for users to remove the selected puppy from the roster.
  */
+// eslint-disable-next-line react/prop-types
 export default function PuppyDetails({ selectedPuppyId, setSelectedPuppyId }) {
   // TODO: Grab data from the `getPuppy` query
 
   // TODO: Use the `deletePuppy` mutation to remove a puppy when the button is clicked
+  const { data, isSuccess, isLoading } = useGetPuppyQuery(selectedPuppyId);
+  const [puppy, setPuppy] = useState({});
+  const [deletePuppy] = useDeletePuppyMutation();
+  // setSelectedPuppyId(id);
 
   function removePuppy(id) {
-    setSelectedPuppyId();
+    // setSelectedPuppyId(id);
+    deletePuppy(id);
+    setSelectedPuppyId(null);
   }
-
+  console.log(puppy);
+  useEffect(() => {
+    if (isSuccess) {
+      console.log(data?.data?.player);
+      setPuppy(data?.data?.player);
+    }
+  }, [data]);
   // There are 3 possibilities:
   let $details;
   // 1. A puppy has not yet been selected.
